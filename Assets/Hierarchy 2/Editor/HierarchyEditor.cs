@@ -110,43 +110,67 @@ namespace Hierarchy2
             InternalEditorType = arrayInteralEditorType.ToList();
             dicInternalEditorType = arrayInteralEditorType.ToDictionary(type => type.FullName);
 
-            FieldInfo refreshHierarchy = typeof(EditorApplication).GetField(nameof(refreshHierarchy), BindingFlags.Static | BindingFlags.NonPublic);
-            MethodInfo OnRepaintHierarchyWindow = typeof(HierarchyEditor).GetMethod(nameof(OnRepaintHierarchyWindow), BindingFlags.NonPublic | BindingFlags.Static);
-            Delegate refreshHierarchyDelegate = Delegate.CreateDelegate(typeof(EditorApplication.CallbackFunction), OnRepaintHierarchyWindow);
+            FieldInfo refreshHierarchy = typeof(EditorApplication).GetField(nameof(refreshHierarchy),
+                BindingFlags.Static | BindingFlags.NonPublic);
+            MethodInfo OnRepaintHierarchyWindow = typeof(HierarchyEditor).GetMethod(nameof(OnRepaintHierarchyWindow),
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Delegate refreshHierarchyDelegate =
+                Delegate.CreateDelegate(typeof(EditorApplication.CallbackFunction), OnRepaintHierarchyWindow);
             refreshHierarchy.SetValue(null, refreshHierarchyDelegate);
 
 
-            FieldInfo windowsReordered = typeof(EditorApplication).GetField(nameof(windowsReordered), BindingFlags.Static | BindingFlags.NonPublic);
-            MethodInfo OnWindowsReordered = typeof(HierarchyEditor).GetMethod(nameof(OnWindowsReordered), BindingFlags.NonPublic | BindingFlags.Static);
-            Delegate windowsReorderedDelegate = Delegate.CreateDelegate(typeof(EditorApplication.CallbackFunction), OnWindowsReordered);
+            FieldInfo windowsReordered = typeof(EditorApplication).GetField(nameof(windowsReordered),
+                BindingFlags.Static | BindingFlags.NonPublic);
+            MethodInfo OnWindowsReordered = typeof(HierarchyEditor).GetMethod(nameof(OnWindowsReordered),
+                BindingFlags.NonPublic | BindingFlags.Static);
+            Delegate windowsReorderedDelegate =
+                Delegate.CreateDelegate(typeof(EditorApplication.CallbackFunction), OnWindowsReordered);
             windowsReordered.SetValue(null, windowsReorderedDelegate);
 
             {
-                dicInternalEditorType.TryGetValue(nameof(UnityEditor) + "." + nameof(SceneHierarchyWindow), out SceneHierarchyWindow);
-                dicInternalEditorType.TryGetValue(nameof(UnityEditor) + "." + nameof(GameObjectTreeViewGUI), out GameObjectTreeViewGUI); //GameObjectTreeViewGUI : TreeViewGUI
-                dicInternalEditorType.TryGetValue(nameof(UnityEditor) + "." + nameof(SceneHierarchy), out SceneHierarchy);
+                dicInternalEditorType.TryGetValue(nameof(UnityEditor) + "." + nameof(SceneHierarchyWindow),
+                    out SceneHierarchyWindow);
+                dicInternalEditorType.TryGetValue(nameof(UnityEditor) + "." + nameof(GameObjectTreeViewGUI),
+                    out GameObjectTreeViewGUI); //GameObjectTreeViewGUI : TreeViewGUI
+                dicInternalEditorType.TryGetValue(nameof(UnityEditor) + "." + nameof(SceneHierarchy),
+                    out SceneHierarchy);
             }
 
-            FieldInfo s_LastInteractedHierarchy = SceneHierarchyWindow.GetField(nameof(s_LastInteractedHierarchy), BindingFlags.NonPublic | BindingFlags.Static);
+            FieldInfo s_LastInteractedHierarchy = SceneHierarchyWindow.GetField(nameof(s_LastInteractedHierarchy),
+                BindingFlags.NonPublic | BindingFlags.Static);
 
-            MethodInfo lastInteractedHierarchyWindow = SceneHierarchyWindow.GetProperty(nameof(lastInteractedHierarchyWindow), BindingFlags.Static | BindingFlags.Public).GetGetMethod();
-            lastInteractedHierarchyWindowDelegate = Delegate.CreateDelegate(typeof(Func<SearchableEditorWindow>), lastInteractedHierarchyWindow) as Func<SearchableEditorWindow>;
+            MethodInfo lastInteractedHierarchyWindow = SceneHierarchyWindow
+                .GetProperty(nameof(lastInteractedHierarchyWindow), BindingFlags.Static | BindingFlags.Public)
+                .GetGetMethod();
+            lastInteractedHierarchyWindowDelegate =
+                Delegate.CreateDelegate(typeof(Func<SearchableEditorWindow>), lastInteractedHierarchyWindow) as
+                    Func<SearchableEditorWindow>;
 
-            MethodInfo GetAllSceneHierarchyWindows = SceneHierarchyWindow.GetMethod(nameof(GetAllSceneHierarchyWindows), BindingFlags.Static | BindingFlags.Public);
-            GetAllSceneHierarchyWindowsDelegate = Delegate.CreateDelegate(typeof(Func<IEnumerable>), GetAllSceneHierarchyWindows) as Func<IEnumerable>;
+            MethodInfo GetAllSceneHierarchyWindows = SceneHierarchyWindow.GetMethod(nameof(GetAllSceneHierarchyWindows),
+                BindingFlags.Static | BindingFlags.Public);
+            GetAllSceneHierarchyWindowsDelegate =
+                Delegate.CreateDelegate(typeof(Func<IEnumerable>), GetAllSceneHierarchyWindows) as Func<IEnumerable>;
 
             {
-                m_SceneHierarchy = SceneHierarchyWindow.GetField(nameof(m_SceneHierarchy), BindingFlags.NonPublic | BindingFlags.Instance);
-                m_TreeView = SceneHierarchy.GetField(nameof(m_TreeView), BindingFlags.NonPublic | BindingFlags.Instance);
-                gui = m_TreeView.FieldType.GetProperty(nameof(gui).ToLower(), BindingFlags.Public | BindingFlags.Instance);
-                k_IconWidth = GameObjectTreeViewGUI.GetField(nameof(k_IconWidth), BindingFlags.Public | BindingFlags.Instance);
+                m_SceneHierarchy = SceneHierarchyWindow.GetField(nameof(m_SceneHierarchy),
+                    BindingFlags.NonPublic | BindingFlags.Instance);
+                m_TreeView =
+                    SceneHierarchy.GetField(nameof(m_TreeView), BindingFlags.NonPublic | BindingFlags.Instance);
+                gui = m_TreeView.FieldType.GetProperty(nameof(gui).ToLower(),
+                    BindingFlags.Public | BindingFlags.Instance);
+                k_IconWidth =
+                    GameObjectTreeViewGUI.GetField(nameof(k_IconWidth), BindingFlags.Public | BindingFlags.Instance);
             }
 
-            MethodInfo DisplayObjectContextMenu = typeof(EditorUtility).GetMethods(BindingFlags.Static | BindingFlags.NonPublic).Single
-            (
-                method => method.Name == nameof(DisplayObjectContextMenu) && method.GetParameters()[1].ParameterType == typeof(UnityEngine.Object)
-            );
-            DisplayObjectContextMenuDelegate = Delegate.CreateDelegate(typeof(Action<Rect, UnityEngine.Object, int>), DisplayObjectContextMenu) as Action<Rect, UnityEngine.Object, int>;
+            MethodInfo DisplayObjectContextMenu = typeof(EditorUtility)
+                .GetMethods(BindingFlags.Static | BindingFlags.NonPublic).Single
+                (
+                    method => method.Name == nameof(DisplayObjectContextMenu) &&
+                              method.GetParameters()[1].ParameterType == typeof(UnityEngine.Object)
+                );
+            DisplayObjectContextMenuDelegate =
+                Delegate.CreateDelegate(typeof(Action<Rect, UnityEngine.Object, int>), DisplayObjectContextMenu) as
+                    Action<Rect, UnityEngine.Object, int>;
 
 
             Type IconSelector = typeof(EditorWindow).Assembly.GetTypes().Single(type =>
@@ -156,15 +180,20 @@ namespace Hierarchy2
                 method => method.Name == nameof(ShowAtPosition) &&
                           method.GetParameters()[0].ParameterType == typeof(UnityEngine.Object)
             );
-            IconSelectorShowAtPositionDelegate = Delegate.CreateDelegate(typeof(Func<GameObject, Rect, bool, bool>), ShowAtPosition) as Func<GameObject, Rect, bool, bool>;
+            IconSelectorShowAtPositionDelegate =
+                Delegate.CreateDelegate(typeof(Func<GameObject, Rect, bool, bool>), ShowAtPosition) as
+                    Func<GameObject, Rect, bool, bool>;
 
-            GetItemAndRowIndexMethod = m_TreeView.FieldType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance).Single(method => method.Name == "GetItemAndRowIndex");
+            GetItemAndRowIndexMethod = m_TreeView.FieldType.GetMethods(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Single(method => method.Name == "GetItemAndRowIndex");
 
-            m_TreeView_IData = m_TreeView.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance).Single(property => property.Name == "data");
+            m_TreeView_IData = m_TreeView.FieldType.GetProperties(BindingFlags.Public | BindingFlags.Instance)
+                .Single(property => property.Name == "data");
 
-            m_Rows = InternalEditorType.Find(type => type.Name == "TreeViewDataSource").GetFields(BindingFlags.NonPublic | BindingFlags.Instance).Single(field => field.Name.Contains(nameof(m_Rows)));
+            m_Rows = InternalEditorType.Find(type => type.Name == "TreeViewDataSource")
+                .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
+                .Single(field => field.Name.Contains(nameof(m_Rows)));
         }
-
         public static IEnumerable GetAllSceneHierarchyWindows() => GetAllSceneHierarchyWindowsDelegate();
 
         public static void DisplayObjectContextMenu(Rect rect, UnityEngine.Object unityObject, int value) => DisplayObjectContextMenuDelegate(rect, unityObject, value);
