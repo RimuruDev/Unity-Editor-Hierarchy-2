@@ -194,11 +194,14 @@ namespace Hierarchy2
                 .GetFields(BindingFlags.NonPublic | BindingFlags.Instance)
                 .Single(field => field.Name.Contains(nameof(m_Rows)));
         }
+
         public static IEnumerable GetAllSceneHierarchyWindows() => GetAllSceneHierarchyWindowsDelegate();
 
-        public static void DisplayObjectContextMenu(Rect rect, UnityEngine.Object unityObject, int value) => DisplayObjectContextMenuDelegate(rect, unityObject, value);
+        public static void DisplayObjectContextMenu(Rect rect, UnityEngine.Object unityObject, int value) =>
+            DisplayObjectContextMenuDelegate(rect, unityObject, value);
 
-        public static bool IconSelectorShowAtPosition(GameObject gameObject, Rect rect, bool value) => IconSelectorShowAtPositionDelegate(gameObject, rect, value);
+        public static bool IconSelectorShowAtPosition(GameObject gameObject, Rect rect, bool value) =>
+            IconSelectorShowAtPositionDelegate(gameObject, rect, value);
 
         private static MethodInfo GetItemAndRowIndexMethod;
         private static PropertyInfo m_TreeView_IData;
@@ -695,16 +698,22 @@ namespace Hierarchy2
             if (currentEvent.type != EventType.Repaint)
                 return;
 
-            HierarchySettings.InstantBackgroundColor instantBackgroundColor = new HierarchySettings.InstantBackgroundColor();
+            HierarchySettings.InstantBackgroundColor instantBackgroundColor =
+                new HierarchySettings.InstantBackgroundColor();
             bool contain = false;
             for (int i = 0; i < settings.instantBackgroundColors.Count; ++i)
             {
                 if (!settings.instantBackgroundColors[i].active) continue;
                 if
                 (
-                    (settings.instantBackgroundColors[i].useTag && !string.IsNullOrEmpty(settings.instantBackgroundColors[i].tag) && rowItem.gameObject.CompareTag(settings.instantBackgroundColors[i].tag)) ||
-                    (settings.instantBackgroundColors[i].useLayer && (1 << rowItem.gameObject.layer & settings.instantBackgroundColors[i].layer) != 0) ||
-                    (settings.instantBackgroundColors[i].useStartWith && !string.IsNullOrEmpty(settings.instantBackgroundColors[i].startWith) && rowItem.name.StartsWith(settings.instantBackgroundColors[i].startWith))
+                    (settings.instantBackgroundColors[i].useTag &&
+                     !string.IsNullOrEmpty(settings.instantBackgroundColors[i].tag) &&
+                     rowItem.gameObject.CompareTag(settings.instantBackgroundColors[i].tag)) ||
+                    (settings.instantBackgroundColors[i].useLayer &&
+                     (1 << rowItem.gameObject.layer & settings.instantBackgroundColors[i].layer) != 0) ||
+                    (settings.instantBackgroundColors[i].useStartWith &&
+                     !string.IsNullOrEmpty(settings.instantBackgroundColors[i].startWith) &&
+                     rowItem.name.StartsWith(settings.instantBackgroundColors[i].startWith))
                 )
                 {
                     contain = true;
@@ -834,7 +843,8 @@ namespace Hierarchy2
                 if (icon == null)
                 {
                     icon = AssetPreview.GetMiniThumbnail(rowItem.gameObject);
-                    if (icon.name == "GameObject Icon" || icon.name == "d_GameObject Icon" || icon.name == "Prefab Icon" ||
+                    if (icon.name == "GameObject Icon" || icon.name == "d_GameObject Icon" ||
+                        icon.name == "Prefab Icon" ||
                         icon.name == "d_Prefab Icon" || icon.name == "PrefabModel Icon" ||
                         icon.name == "d_PrefabModel Icon")
                         return;
@@ -1442,7 +1452,7 @@ namespace Hierarchy2
 
         bool IsFirstRow(Rect rect) => rect.y / rect.height == 0;
 
-        int GetRowIndex(Rect rect) => (int) (rect.y / rect.height);
+        int GetRowIndex(Rect rect) => (int)(rect.y / rect.height);
 
         bool InSelection(int ID) => Selection.Contains(ID) ? true : false;
 
@@ -1783,18 +1793,19 @@ namespace Hierarchy2
             internal static GUIStyle Header = new GUIStyle(TreeBoldLabel)
             {
                 richText = true,
-                normal = new GUIStyleState() {textColor = Color.white}
+                normal = new GUIStyleState() { textColor = Color.white }
             };
 
+            // Unity 2022+
             internal static GUIStyle TreeBoldLabel
             {
-                get { return UnityEditor.IMGUI.Controls.TreeView.DefaultStyles.boldLabel; }
+                get { return EditorStyles.boldLabel; } // can also use UIElementsStyleHelper.GetBoldStyle()
             }
 
-            internal static GUIStyle TreeLabel = new GUIStyle(UnityEditor.IMGUI.Controls.TreeView.DefaultStyles.label)
+            internal static GUIStyle TreeLabel = new GUIStyle(EditorStyles.label)
             {
                 richText = true,
-                normal = new GUIStyleState() {textColor = Color.white}
+                normal = new GUIStyleState() { textColor = Color.white }
             };
         }
 
@@ -1863,7 +1874,8 @@ namespace Hierarchy2
                 var index = gameObject.transform.GetSiblingIndex();
                 if (index > 0)
                 {
-                    Undo.SetTransformParent(gameObject.transform, gameObject.transform.parent, string.Format("{0} Parenting", gameObject.name));
+                    Undo.SetTransformParent(gameObject.transform, gameObject.transform.parent,
+                        string.Format("{0} Parenting", gameObject.name));
 
                     gameObject.transform.SetSiblingIndex(--index);
                 }
@@ -1879,7 +1891,8 @@ namespace Hierarchy2
                 if (gameObject == null)
                     return;
 
-                Undo.SetTransformParent(gameObject.transform, gameObject.transform.parent, string.Format("{0} Parenting", gameObject.name));
+                Undo.SetTransformParent(gameObject.transform, gameObject.transform.parent,
+                    string.Format("{0} Parenting", gameObject.name));
 
                 var index = gameObject.transform.GetSiblingIndex();
                 gameObject.transform.SetSiblingIndex(++index);
@@ -1891,7 +1904,8 @@ namespace Hierarchy2
             [MenuItem("Tools/Hierarchy 2/Separator", priority = 0)]
             static void CreateHeaderInstance(UnityEditor.MenuCommand command)
             {
-                GameObject gameObject = new GameObject(string.Format("{0}Separator", HierarchyEditor.instance.settings.separatorStartWith));
+                GameObject gameObject = new GameObject(string.Format("{0}Separator",
+                    HierarchyEditor.instance.settings.separatorStartWith));
 
                 Undo.RegisterCreatedObjectUndo(gameObject, "Create Separator");
                 // Don't create headers as children of the selected objects because only root headers are drawn with background
