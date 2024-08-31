@@ -1,0 +1,28 @@
+{
+  "name": "unity-editor-hierarchy-2",
+  "version": "1.0.0",
+  "description": "A Unity Editor extension to enhance the hierarchy window with additional features and customizations.",
+  "author": "RimuruDev",
+  "license": "MIT",
+  "main": "Assets/Plugins/Hierarchy2/Editor/Hierarchy2.cs",
+  "scripts": {},
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/RimuruDev/Unity-Editor-Hierarchy-2.git"
+  },
+  "keywords": [
+    "unity",
+    "editor",
+    "hierarchy",
+    "customization",
+    "rimuru-dev",
+    "rimurudev",
+    "extension"
+  ],
+  "bugs": {
+    "email": "rimuru.dev@gmail.com",
+    "url": "https://github.com/RimuruDev/Unity-Editor-Hierarchy-2/issues"
+  },
+  "homepage": "https://github.com/RimuruDev/Unity-Editor-Hierarchy-2",
+  "dependencies": {}
+}
