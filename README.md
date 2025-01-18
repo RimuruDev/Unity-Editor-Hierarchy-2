@@ -13,7 +13,11 @@
    ```
    https://github.com/RimuruDev/Unity-Editor-Hierarchy-2.git
    ```
-5. Нажмите `Add`, чтобы установить пакет.
+   dependency:
+   ```
+    "com.unity.modules.uielements": "1.0.0",
+   ```
+6. Нажмите `Add`, чтобы установить пакет.
 
 ### Способ 2: Установка из релиза
 
