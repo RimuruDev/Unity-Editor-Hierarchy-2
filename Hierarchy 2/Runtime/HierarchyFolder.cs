@@ -1,13 +1,13 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
 using UnityEngine;
 
 namespace Hierarchy2
 {
+#if UNITY_EDITOR
     [AddComponentMenu("Hierarchy 2/Hierarchy Folder", 0)]
+#endif
     public class HierarchyFolder : MonoBehaviour
     {
+#if UNITY_EDITOR
         public enum FlattenMode
         {
             None = 0,
@@ -61,5 +61,6 @@ namespace Hierarchy2
             if (destroyAfterFlatten)
                 Destroy(gameObject);
         }
+#endif
     }
 }
